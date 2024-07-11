@@ -8,6 +8,15 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
     gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "http://*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true # 允许携带 cookie
+            max-age: 3600 # 一次跨域允许请求的事件为 3600s
       discovery:
         locator:
           enabled: true
