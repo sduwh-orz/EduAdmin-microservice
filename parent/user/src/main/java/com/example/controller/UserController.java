@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
-//@RequestMapping(path = "/user")
+//@CrossOrigin
+@RequestMapping(path = "/user")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -18,7 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(path = "/user/login")
+    @PostMapping(path = "login")
     public synchronized Response login(@RequestParam String userId, @RequestParam String userPassword, HttpSession httpSession) {
         if (httpSession.getAttribute("user") != null) {
             return new Response(false, "已登录过.", null);
@@ -37,7 +37,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(path = "/user/logout")
+    @GetMapping(path = "logout")
     public synchronized Response logout(HttpSession httpSession) {
         if (httpSession.getAttribute("user") != null) {
             httpSession.removeAttribute("user");
@@ -47,7 +47,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(path = "/user/getUserName/{userId}")
+    @GetMapping(path = "getUserName/{userId}")
     public synchronized Response getUserName(@PathVariable(name = "userId") String userId) {
         if (userService.getUser(userId) == null) {
             return new Response(false, "用户不存在", null);
