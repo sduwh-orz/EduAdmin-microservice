@@ -25,10 +25,6 @@ public class ClassroomController {
     @Autowired
     private ClassroomApplicationService classroomApplicationService;
 
-    public void setClassroomService(ClassroomService classroomService) {
-        this.classroomService = classroomService;
-    }
-
     @GetMapping("/listApplication")
     public synchronized Response listApplication(HttpSession session) {
         if(session.getAttribute("user") == null)
