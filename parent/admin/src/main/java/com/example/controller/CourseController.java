@@ -22,10 +22,6 @@ public class CourseController {
     @Autowired
     private UserRepository userRepository;
 
-    public void setCourseService(CourseService courseService) {
-        this.courseService = courseService;
-    }
-
     @PostMapping("/accept")
     public synchronized Response acceptCourse(HttpSession session, @RequestParam String courseId) {
         if(session.getAttribute("user") == null)
