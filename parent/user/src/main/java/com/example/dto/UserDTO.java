@@ -13,6 +13,8 @@ public class UserDTO implements Serializable {
 
     private String userType;
 
+    private String userEmail;
+
     public String getUserId() {
         return userId;
     }
@@ -43,5 +45,13 @@ public class UserDTO implements Serializable {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }
