@@ -45,3 +45,10 @@ spring:
             - Path=/user/**
           filters:
             - StripPrefix=1
+  session:
+  data:
+    redis:
+      host: 82.157.182.87
+      port: 6379
+      password: sducs2024
+      database: 0
