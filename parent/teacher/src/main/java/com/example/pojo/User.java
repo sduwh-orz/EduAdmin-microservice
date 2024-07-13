@@ -18,8 +18,6 @@ public class User {
     private String userPassword;
     @Column(name = "user_type", nullable = false)
     private String userType;
-    @Column(name = "user_email", nullable = false)
-    private String userEmail;
 
 
     public String getUserId() {
@@ -54,13 +52,5 @@ public class User {
 
     public void setUserType(String userType) {
         this.userType = userType;
-    }
-
-    public String getUserEmail() {
-        return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
     }
 }

@@ -7,6 +7,12 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  data:
+    redis:
+      host: 82.157.182.87
+      port: 6379
+      password: sducs2024
+      database: 0
   datasource:
     username: root
     password: sducs2024

@@ -5,6 +5,7 @@ import com.example.response.Response;
 import com.example.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.session.SessionRepository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private SessionRepository sessionRepository;
 
     public void setUserService(UserService userService) {
         this.userService = userService;
@@ -40,6 +43,8 @@ public class UserController {
     @GetMapping(path = "logout")
     public synchronized Response logout(HttpSession httpSession) {
         if (httpSession.getAttribute("user") != null) {
+//            String sessionId = httpSession.getId();
+//            sessionRepository.deleteById(sessionId);
             httpSession.removeAttribute("user");
             return new Response(true, "成功退出登录.", null);
         } else {
