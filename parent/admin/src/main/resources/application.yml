@@ -17,3 +17,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  data:
+    redis:
+      host: 82.157.182.87
+      port: 6379
+      password: sducs2024
