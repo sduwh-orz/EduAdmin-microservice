@@ -1,7 +1,6 @@
 package com.example.service;
 
 import com.example.pojo.ExamApplication;
-import com.example.repository.ExamRepository;
 import com.example.repository.FinalExamRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,15 +12,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ExamApplicationService {
-//    @Autowired
-//    private ExamApplicationRepository ExamApplicationRepository;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    @Autowired
-    private ExamRepository examRepository;
 
     @Autowired
     private FinalExamRepository finalExamRepository;
@@ -32,7 +28,7 @@ public class ExamApplicationService {
             String examFormat) {
 
         int finalExamCount = finalExamRepository.countFinalExams();
-        int examApplicationCount = Math.toIntExact(stringRedisTemplate.opsForSet().size("finalExam"));
+        int examApplicationCount = Objects.requireNonNull(stringRedisTemplate.opsForSet().size("finalExam")).intValue();
 
         String examId = String.valueOf(6000 + finalExamCount + examApplicationCount);
         String redisKey = "finalExam_" + examId;
@@ -54,9 +50,8 @@ public class ExamApplicationService {
 
     public List<ExamApplication> listAllApplication() {
         List<ExamApplication> result = new LinkedList<>();
-        Cursor<String> cursor = stringRedisTemplate.opsForSet().scan("finalExam", ScanOptions.NONE);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
+        try (Cursor<String> cursor = stringRedisTemplate.opsForSet().scan("finalExam", ScanOptions.NONE)) {
+            ObjectMapper mapper = new ObjectMapper();
             while (cursor.hasNext()) {
                 ExamApplication app = mapper.readValue(
                         stringRedisTemplate.opsForValue().get(cursor.next()),
@@ -66,12 +61,13 @@ public class ExamApplicationService {
             }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                cursor.close();
-            } catch (Exception e) {
-            }
         }
         return result;
+    }
+
+    public void deleteByExamId(String examId) {
+        String redisKey = "finalExam_" + examId;
+        stringRedisTemplate.opsForSet().remove("finalExam", redisKey);
+        stringRedisTemplate.delete(redisKey);
     }
 }
