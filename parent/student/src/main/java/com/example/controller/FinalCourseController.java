@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping(path = "/finalCourse")
 public class FinalCourseController {
     @Autowired

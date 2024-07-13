@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.pojo.User;
 import com.example.response.Response;
 import com.example.service.CourseApplicationService;
+import com.example.service.CourseService;
 import com.example.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/courseApplication")
 public class CourseApplicationController {
     @Autowired
-    private CourseApplicationService courseApplicationService;
+    private CourseService courseService;
     @Autowired
     private UserService userService;
 
@@ -20,8 +21,8 @@ public class CourseApplicationController {
 //        this.courseService = courseService;
 //    }
 
-    public CourseApplicationController(CourseApplicationService courseApplicationService) {
-        this.courseApplicationService = courseApplicationService;
+    public CourseApplicationController(CourseService courseService) {
+        this.courseService = courseService;
     }
 
     @PostMapping(path = "/courseApplication")
@@ -34,7 +35,7 @@ public class CourseApplicationController {
         } else {
             User user = userService.getUser((String) httpSession.getAttribute("user"));
             String userId = user.getUserId();
-            courseApplicationService.applyCourseByCourseIdNameUserIdAndCourseNum(courseName, userId, courseNum);
+            courseService.applyCourseByCourseIdNameUserIdAndCourseNum(courseName, userId, courseNum);
             return new Response(true, "", null);
         }
     }
