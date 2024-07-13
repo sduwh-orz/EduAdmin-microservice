@@ -64,4 +64,10 @@ public class ExamApplicationService {
         }
         return result;
     }
+
+    public void deleteByExamId(String examId) {
+        String redisKey = "finalExam_" + examId;
+        stringRedisTemplate.opsForSet().remove("finalExam", redisKey);
+        stringRedisTemplate.delete(redisKey);
+    }
 }
