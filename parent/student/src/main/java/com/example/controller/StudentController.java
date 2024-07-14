@@ -6,6 +6,7 @@ import com.example.repository.*;
 import com.example.response.Response;
 import com.example.service.*;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +39,8 @@ public class StudentController {
     private FinalCourseService finalCourseService;
     @Autowired
     private StudentSelectionService studentSelectionService;
+    @Autowired
+    private StudentCourseSelectionMsgSender studentCourseSelectionMsgSender;
     @Autowired
     HttpSession httpSession;
 
@@ -138,6 +141,7 @@ public class StudentController {
     }
 
     // 提交选课
+    // 2024.7.14：改用消息队列实现
     @PostMapping("/select_course")
     public Response selectCourse(@RequestParam List<String> courseIdList) {
         if (httpSession.getAttribute("user") == null)
@@ -148,9 +152,25 @@ public class StudentController {
                 var evaluation = new StudentCourses();
                 evaluation.setCourseId(courseId);
                 evaluation.setStudentId(user);
-                studentCoursesRepository.save(evaluation);
+                studentCourseSelectionMsgSender.studentCourseSelectionSend(evaluation);
             }
             studentSelectionService.saveStudentSelection((String) httpSession.getAttribute("user"));
+            return new Response(true, "", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(false, "服务器错误", null);
+        }
+    }
+
+    // 提交选课：测试多用户同时提交选课对消息队列的并发性
+    @GetMapping("/test")
+    public Response test(@RequestParam String user) {
+        try {
+            var evaluation = new StudentCourses();
+            evaluation.setCourseId("1");
+            evaluation.setStudentId(user);
+            studentCourseSelectionMsgSender.studentCourseSelectionSend(evaluation);
+            studentSelectionService.saveStudentSelection(user);
             return new Response(true, "", null);
         } catch (Exception e) {
             e.printStackTrace();
